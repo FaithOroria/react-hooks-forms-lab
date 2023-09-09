@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent,waitFor } from "@testing-library/react";
 import Filter from "../components/Filter";
 import ShoppingList from "../components/ShoppingList";
 
@@ -10,14 +10,19 @@ const testData = [
   { id: 4, name: "String Cheese", category: "Dairy" },
   { id: 5, name: "Swiss Cheese", category: "Dairy" },
   { id: 6, name: "Cookies", category: "Dessert" },
+  { id: 7, name: "Ice Cream", category: "Dessert" },
 ];
 
 // Filter
 const noop = () => {};
-test("uses a prop of 'search' to display the search term in the input field", () => {
+
+test("uses a prop of 'search' to display the search term in the input field", async () => {
   render(<Filter search="testing" onSearchChange={noop} />);
 
-  expect(screen.queryByPlaceholderText(/Search/).value).toBe("testing");
+  // Wait for the component to update after rendering
+  await waitFor(() => {
+    expect(screen.queryByPlaceholderText(/Search/).value).toBe("testing");
+  });
 });
 
 test("calls the onSearchChange callback prop when the input is changed", () => {
